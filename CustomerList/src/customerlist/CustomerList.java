@@ -15,9 +15,10 @@ import org.apache.commons.lang3.StringUtils;
 public class CustomerList {
 
     public static void main(String[] args) {
-        String info = "", numofpeople;
+        char code;
+        String info = "", numofpeople, postalcode;
         int test, num = 0, count;
-        ArrayList list, list2=new ArrayList();
+        ArrayList list, list2 = new ArrayList();
         list = fileRead.read("list.secure");
         for (Object list1 : list) {
             info += (list1 + "\n");
@@ -47,15 +48,22 @@ public class CustomerList {
                         System.out.println("please input the info in the correct format next time.");
 
                     }
+                    postalcode = info.substring(info.length() - 5);
+                    for (int n=0;n<6;n++) {
+                        code=postalcode.charAt(n);
+                        if (n%2==0) {
+                            
+                        }
+                    }
                 } while (test == 1);
             }
             fileAdd.add(list2, "list.secure");
             list = fileRead.read("list.secure");
-            info="";
-        for (Object list1 : list) {
-            info += (list1 + "\n");
-        }
-        JOptionPane.showMessageDialog(null, info);
+            info = "";
+            for (Object list1 : list) {
+                info += (list1 + "\n");
+            }
+            JOptionPane.showMessageDialog(null, info);
         } else {
             System.exit(0);
         }
