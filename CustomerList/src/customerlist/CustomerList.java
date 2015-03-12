@@ -17,7 +17,7 @@ public class CustomerList {
     public static void main(String[] args) {
         char code;
         String info = "", numofpeople, postalcode;
-        int test, num = 0, count;
+        int test, num = 0, count,x=0;
         ArrayList list, list2 = new ArrayList();
         list = fileRead.read("list.secure");
         for (Object list1 : list) {
@@ -40,21 +40,37 @@ public class CustomerList {
                     if (info == null) {
                         test = 1;
                         System.out.println("please input information next time.");
+                        break;
                     } else if (count == 5) {
-                        test = 0;
-                        list2.add(i, info);
+
+                        postalcode = info.substring(info.length() - 6);
+                        for (int n = 0; n < 6; n++) {
+                            code = postalcode.charAt(n);
+                            if (n % 2 == 0) {
+                                
+                                if (!Character.isLetter(code)) {
+                                    test = 1;
+                                    System.out.println("please input the postal code in the correct format");
+                                    break;
+                                }
+                            } else {
+                                if (!Character.isDigit(code)) {
+                                    test = 1;
+                                    System.out.println("please input the postal code in the correct format");
+                                    break;
+                                }
+                            }
+                        }
+                        if (test != 1) {
+                            test = 0;
+                            list2.add(i, info);
+                        }
                     } else {
                         test = 1;
                         System.out.println("please input the info in the correct format next time.");
+                        break;
+                    }
 
-                    }
-                    postalcode = info.substring(info.length() - 5);
-                    for (int n=0;n<6;n++) {
-                        code=postalcode.charAt(n);
-                        if (n%2==0) {
-                            
-                        }
-                    }
                 } while (test == 1);
             }
             fileAdd.add(list2, "list.secure");
