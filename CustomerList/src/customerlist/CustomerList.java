@@ -1,9 +1,13 @@
 package customerlist;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import javax.swing.*;
-import file.*;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * @title CustomerList
@@ -17,9 +21,9 @@ public class CustomerList {
     public static void main(String[] args) {
         char code;
         String info = "", numofpeople, postalcode;
-        int test, num = 0, count;
+        int test, num = 0, count = 0;
         ArrayList list, list2 = new ArrayList();//read list and store it in a list array
-        list = fileRead.read("list.secure");//use my fileRead class to read the file
+        list = read("list.secure");//use my fileRead class to read the file
         for (Object list1 : list) {//add all the info to a single varible formated to have lines
             info += (list1 + "\n");
         }
@@ -37,10 +41,12 @@ public class CustomerList {
                 do {
                     test = 0;
                     info = JOptionPane.showInputDialog("Input the info in this format:\nfirst name,last name,address,city,province,postal code");
-                    count = StringUtils.countMatches(info, ",");//make sure the format given is correct
-                    if (info == null) {
-                        break;//skip the person if the use presses cancel, or subtract 1 of the amount of people to be added to the list
-                    } else if (count == 5) {
+                    for (int x = 0; i < info.length(); i++) {
+                        if (info.charAt(i)==',') {
+                            count++;
+                        }
+                    }
+                   if (count == 5) {
 
                         postalcode = info.substring(info.length() - 6);
                         for (int n = 0; n < 6; n++) {//check postal code
@@ -70,8 +76,8 @@ public class CustomerList {
 
                 } while (test == 1);//retry if there is a problem with the given info
             }
-            fileAdd.add(list2, "list.secure");// use my fileAdd class to add the second list to the end of te file
-            list = fileRead.read("list.secure");//use my fileRead to refresh the contents of the first list
+            add(list2, "list.secure");// use my fileAdd class to add the second list to the end of te file
+            list = read("list.secure");//use my fileRead to refresh the contents of the first list
             info = "";
             for (Object list1 : list) {
                 info += (list1 + "\n");
@@ -82,4 +88,40 @@ public class CustomerList {
         }
 
     }
+
+    public static ArrayList read(String path) {
+        int num = 0;
+        ArrayList contents = new ArrayList();
+        String line;
+        try {
+            BufferedReader br = new BufferedReader(
+                    new FileReader(path));
+
+            while ((line = br.readLine()) != null) {
+                contents.add(num, line);
+                num++;
+            }
+        } catch (FileNotFoundException ex) {
+            System.out.println("File not found");
+            System.exit(0);
+
+        } catch (IOException ex) {
+            System.out.println("An error has occured");
+            System.exit(1);
+        }
+        return contents;
+    }
+    public static void add(ArrayList towrite, String path) {
+        try {
+            PrintWriter writer = new PrintWriter(new FileWriter(path,true));
+            for (Object towrite1 : towrite) {
+                writer.println(towrite1);
+            }
+            writer.close();
+        } catch (IOException ex) {
+            System.out.println("An error has occured.");
+            System.exit(0);
+        }
+    }
 }
+
